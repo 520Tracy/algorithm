@@ -1,0 +1,51 @@
+题目描述：
+给定一个包含非负整数的 m x n 网格，请找出一条从左上角到右下角的路径，使得路径上的数字总和为最小。
+
+说明：每次只能向下或者向右移动一步。
+
+示例:
+
+输入:
+[
+  [1,3,1],
+  [1,5,1],
+  [4,2,1]
+]
+输出: 7
+解释: 因为路径 1→3→1→1→1 的总和最小。
+
+思路：
+动态规划
+定义：dp[i][j]表示从初始位置走到第i+1行第j+1列的最小路径和
+状态转移方程：
+dp[i][j] = min(dp[i-1][j],dp[i][j-1]) + grid[i][j]
+初始化
+dp[0][0] = grid[0][0]
+dp[0][i] = dp[0][i-1] + grid[0][i]
+dp[i][0] = dp[i-1][0] + grid[i][0]
+
+代码：
+class Solution {
+public:
+    int minPathSum(vector<vector<int>>& grid) {
+        int len_lie = grid[0].size();
+        int len_hang = grid.size();
+        vector<vector<int> > dp;
+        for(int i = 0;i < len_hang;i++)
+        {
+            vector<int> temp(len_lie);
+            dp.push_back(temp);
+        }
+        dp[0][0] = grid[0][0];
+        for(int i = 1;i < len_lie;i++) dp[0][i] = dp[0][i-1] + grid[0][i];
+        for(int i = 1;i < len_hang;i++) dp[i][0] = dp[i-1][0] + grid[i][0];
+        for(int i = 1;i < len_hang;i++)
+        {
+            for(int j = 1;j < len_lie;j++)
+            {
+                dp[i][j] = min(dp[i-1][j],dp[i][j-1]) + grid[i][j];
+            }
+        }
+        return dp[len_hang-1][len_lie-1];
+    }
+};
